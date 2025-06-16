@@ -43,7 +43,7 @@ export const formSchema = z.object({
   name: z.string().min(2, {
     message: "Menu item name must be at least 2 characters.",
   }),
-  price: z.coerce.number().min(1, {
+  price: z.coerce.number().min(0, {
     message: "Price must be at least 1.",
   }),
   max_portion: z.coerce.number().min(1, {
