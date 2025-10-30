@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
-import { type InsertMenuItem, type UpdateMenuItem } from "@shared/schema";
 import { ApiResponse, MenuItemResponse, MenuItemsResponse } from "@/lib/types";
 import { api } from "@/services/api";
+import { InsertMenuItem, UpdateMenuItem } from "../../shared/schema";
 
 // Hook to fetch menu items for a restaurant
 export function useMenuItems(restaurantId: number) {

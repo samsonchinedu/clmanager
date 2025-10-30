@@ -3,11 +3,11 @@ import {
   text,
   serial,
   integer,
-  boolean,
+  // boolean,
   varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+// import { z } from "zod";
 
 // Restaurant model
 export const restaurants = pgTable("restaurants", {

@@ -48,20 +48,13 @@ export function MenuItemCard({ menuItem, restaurantId }: MenuItemCardProps) {
         id: menuItem.id,
         restaurantId,
         data: {
+          ...menuItem,
           status: isAvailable ? "unavailable" : "available"
         }
       });
-
-      toast({
-        title: "Success",
-        description: `Item marked as ${isAvailable ? "unavailable" : "available"}`,
-      });
+      toast({ title: "Success",description: `Item marked as ${isAvailable ? "unavailable" : "available"}` });
     } catch (error) {
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to update item status",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: error instanceof Error ? error.message : "Failed to update item status", variant: "destructive"});
     }
   };
 

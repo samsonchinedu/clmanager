@@ -85,7 +85,10 @@ export function AddMenuItemDialog({ restaurantId }: AddMenuItemDialogProps) {
     try {
       await createMenuItem.mutateAsync({
         restaurantId,
-        data
+        data: {
+          ...data,
+          restaurant_id: restaurantId
+        }
       });
       toast({
         title: "Success",
