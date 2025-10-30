@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { createInsertSchema, } from "drizzle-zod";
-import { menuItems } from "../../../shared/schema";
+// import { createInsertSchema, } from "drizzle-zod";
+// import { menuItems } from "../../../shared/schema";
 import { useCreateMenuItem, useUpdateMenuItem } from "@/hooks/use-menu-items";
 import { useToast } from "@/hooks/use-toast";
 import { type MenuItem } from "../../../shared/schema";
@@ -276,12 +276,7 @@ interface EditMenuItemDialogProps {
   restaurantId: number;
 }
 
-export function EditMenuItemDialog({ 
-  open, 
-  onOpenChange, 
-  menuItem, 
-  restaurantId 
-}: EditMenuItemDialogProps) {
+export function EditMenuItemDialog({ open, onOpenChange, menuItem, restaurantId }: EditMenuItemDialogProps) {
   const { toast } = useToast();
   const updateMenuItem = useUpdateMenuItem();
 

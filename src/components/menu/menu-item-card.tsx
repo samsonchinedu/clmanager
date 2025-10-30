@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger 
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  useUpdateMenuItem, 
-  useDeleteMenuItem 
+import {
+  useUpdateMenuItem,
+  useDeleteMenuItem
 } from "@/hooks/use-menu-items";
 import { type MenuItem } from "../../../shared/schema";
-import { 
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { formatCurrency } from "@/lib/utils";
 import { EditMenuItemDialog } from "./add-menu-item-dialog";
+import { Switch } from "../ui/switch";
 
 interface MenuItemCardProps {
   menuItem: MenuItem;
@@ -34,13 +35,13 @@ interface MenuItemCardProps {
 export function MenuItemCard({ menuItem, restaurantId }: MenuItemCardProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  
+
   const { toast } = useToast();
   const updateMenuItem = useUpdateMenuItem();
   const deleteMenuItem = useDeleteMenuItem();
 
   const isAvailable = menuItem.status === "available";
-  
+
   const toggleAvailability = async () => {
     try {
       await updateMenuItem.mutateAsync({
@@ -50,7 +51,7 @@ export function MenuItemCard({ menuItem, restaurantId }: MenuItemCardProps) {
           status: isAvailable ? "unavailable" : "available"
         }
       });
-      
+
       toast({
         title: "Success",
         description: `Item marked as ${isAvailable ? "unavailable" : "available"}`,
@@ -63,19 +64,19 @@ export function MenuItemCard({ menuItem, restaurantId }: MenuItemCardProps) {
       });
     }
   };
-  
+
   const handleDelete = async () => {
     try {
       await deleteMenuItem.mutateAsync({
         id: menuItem.id,
         restaurantId
       });
-      
+
       toast({
         title: "Success",
         description: "Menu item deleted successfully",
       });
-      
+
       setIsDeleteDialogOpen(false);
     } catch (error) {
       toast({
@@ -85,7 +86,7 @@ export function MenuItemCard({ menuItem, restaurantId }: MenuItemCardProps) {
       });
     }
   };
-  
+
   // Get image based on dish type
   const getMenuItemImage = () => {
     switch (menuItem.dish_type) {
@@ -108,8 +109,8 @@ export function MenuItemCard({ menuItem, restaurantId }: MenuItemCardProps) {
     <>
       <Card className="bg-card rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
         <div className="relative h-48">
-          <img 
-            src={getMenuItemImage()} 
+          <img
+            src={getMenuItemImage()}
             alt={menuItem.name}
             className="w-full h-full object-cover"
           />
@@ -133,6 +134,17 @@ export function MenuItemCard({ menuItem, restaurantId }: MenuItemCardProps) {
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground text-xs">Max: {menuItem.max_portion} portions</span>
             <div className="flex space-x-2">
+              <div className="flex space-x-2 items-center">
+                <Switch
+                  checked={isAvailable}
+                  onCheckedChange={toggleAvailability}
+                  disabled={updateMenuItem.isPending}
+                  aria-label={`Toggle availability for ${menuItem.name}`}
+                />
+                <span className="text-[8px] text-muted-foreground">
+                  {updateMenuItem.isPending ? "Updating..." : isAvailable ? "Available" : "Unavailable"}
+                </span>
+              </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon">
@@ -140,21 +152,21 @@ export function MenuItemCard({ menuItem, restaurantId }: MenuItemCardProps) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="bg-card border-border">
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     className="flex items-center cursor-pointer"
                     onClick={() => setIsEditDialogOpen(true)}
                   >
                     <span className="material-icons mr-2 text-secondary text-sm">edit</span>
                     Edit
                   </DropdownMenuItem>
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     className="flex items-center cursor-pointer"
                     onClick={() => setIsDeleteDialogOpen(true)}
                   >
                     <span className="material-icons mr-2 text-destructive text-sm">delete</span>
                     Delete
                   </DropdownMenuItem>
-                  <DropdownMenuItem 
+                  {/* <DropdownMenuItem
                     className="flex items-center cursor-pointer"
                     onClick={toggleAvailability}
                   >
@@ -162,7 +174,7 @@ export function MenuItemCard({ menuItem, restaurantId }: MenuItemCardProps) {
                       {isAvailable ? "toggle_on" : "toggle_off"}
                     </span>
                     {isAvailable ? "Mark Unavailable" : "Mark Available"}
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -181,7 +193,7 @@ export function MenuItemCard({ menuItem, restaurantId }: MenuItemCardProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel className="border-border">Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={handleDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
@@ -192,11 +204,11 @@ export function MenuItemCard({ menuItem, restaurantId }: MenuItemCardProps) {
       </AlertDialog>
 
       {/* Edit dialog */}
-      <EditMenuItemDialog 
-        open={isEditDialogOpen} 
-        onOpenChange={setIsEditDialogOpen} 
-        menuItem={menuItem} 
-        restaurantId={restaurantId} 
+      <EditMenuItemDialog
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        menuItem={menuItem}
+        restaurantId={restaurantId}
       />
     </>
   );
